@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘의 운세</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+
+    .scene {
+      min-height: 520px;
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem 2.5rem;
+      background: radial-gradient(ellipse at 50% 30%, #1a0533 0%, #0d0118 60%, #000 100%);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--d, 3s) ease-in-out infinite var(--delay, 0s);
+      opacity: 0;
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: 0;
+      }
+
+      50% {
+        opacity: var(--op, 0.7);
+      }
+    }
+
+    .title {
+      font-family: Georgia, serif;
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: #b89fe0;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0.8;
+    }
+
+    .orb-wrap {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      cursor: pointer;
+      margin-bottom: 2.5rem;
+    }
+
+    .orb {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%,
+          #e8d8ff 0%, #c4a0ff 18%, #8040d0 40%,
+          #3a0090 65%, #1a0044 85%, #0a0020 100%);
+      box-shadow:
+        0 0 40px 8px rgba(160, 80, 255, 0.35),
+        0 0 80px 20px rgba(100, 40, 200, 0.2),
+        inset 0 2px 8px rgba(255, 255, 255, 0.18);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      position: relative;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .orb:hover {
+      box-shadow:
+        0 0 60px 16px rgba(180, 100, 255, 0.55),
+        0 0 120px 40px rgba(120, 60, 220, 0.35),
+        inset 0 2px 8px rgba(255, 255, 255, 0.18);
+      transform: translateY(-4px) scale(1.03);
+      animation-play-state: paused;
+    }
+
+    .orb-shine {
+      position: absolute;
+      top: 22px;
+      left: 30px;
+      width: 55px;
+      height: 32px;
+      background: radial-gradient(ellipse, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 100%);
+      border-radius: 50%;
+      transform: rotate(-25deg);
+      pointer-events: none;
+    }
+
+    .orb-inner {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .orb-mist {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: transparent;
+      transition: background 0.4s ease;
+    }
+
+    .orb.active .orb-mist {
+      background: radial-gradient(circle at 50% 50%,
+          rgba(200, 150, 255, 0.25) 0%, transparent 70%);
+      animation: swirl 2s ease-in-out infinite;
+    }
+
+    @keyframes swirl {
+
+      0%,
+      100% {
+        transform: rotate(0deg) scale(1);
+        opacity: 0.7;
+      }
+
+      50% {
+        transform: rotate(180deg) scale(1.1);
+        opacity: 1;
+      }
+    }
+
+    .click-hint {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: #9070c0;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      animation: pulse-hint 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-hint {
+
+      0%,
+      100% {
+        opacity: 0.5;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    .fortune-box {
+      width: 100%;
+      max-width: 360px;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1rem;
+    }
+
+    .fortune-text {
+      font-family: Georgia, serif;
+      font-size: 17px;
+      color: #e8d0ff;
+      text-align: center;
+      line-height: 1.65;
+      opacity: 0;
+      transition: opacity 1.8s ease;
+      text-shadow: 0 0 18px rgba(200, 130, 255, 0.6);
+    }
+
+    .fortune-text.visible {
+      opacity: 1;
+    }
+
+    .divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #7040b0, transparent);
+      margin: 1.2rem auto 0;
+      opacity: 0;
+      transition: opacity 1.5s ease 0.5s;
+    }
+
+    .divider.visible {
+      opacity: 1;
+    }
+
+    .reset-btn {
+      margin-top: 1.5rem;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #7050a0;
+      text-transform: uppercase;
+      background: none;
+      border: none;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.6s ease, color 0.2s;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      padding: 4px 8px;
+    }
+
+    .reset-btn:hover {
+      color: #c0a0ff;
+    }
+
+    .reset-btn.visible {
+      opacity: 1;
+    }
+
+    .ripple-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      margin: -100px 0 0 -100px;
+      border-radius: 50%;
+      border: 2px solid rgba(180, 100, 255, 0.6);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .ripple-ring.animate {
+      animation: ripple 0.9s ease-out forwards;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+
+      100% {
+        transform: scale(2.2);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scene" id="scene">
+    <div class="stars" id="stars"></div>
+    <p class="title">오늘의 운세</p>
+
+    <div class="orb-wrap" id="orbWrap" onclick="revealFortune()">
+      <div class="orb" id="orb">
+        <div class="orb-shine"></div>
+        <div class="orb-inner">
+          <div class="orb-mist" id="mist"></div>
+        </div>
+      </div>
+      <div class="ripple-ring" id="ripple"></div>
+      <span class="click-hint" id="hint">tap to reveal</span>
+    </div>
+
+    <div class="fortune-box">
+      <p class="fortune-text" id="fortuneText"></p>
+    </div>
+    <div class="divider" id="divider"></div>
+    <button class="reset-btn" id="resetBtn" onclick="resetOrb()">다시 묻기</button>
+  </div>
+
+  <script>
+    const fortunes = [
+      "오늘 당신의 손끝에서\n세상이 조금 더 따뜻해집니다.",
+      "멈춰 있는 것처럼 보여도\n보이지 않는 곳에서 자라고 있습니다.",
+      "작은 결단 하나가\n오늘의 흐름을 바꿀 것입니다.",
+      "기다리던 소식이\n예상보다 빨리 찾아옵니다.",
+      "누군가의 말 한마디가\n오늘 당신에게 큰 힘이 됩니다.",
+      "오늘은 직감을 믿으세요.\n당신의 감각이 가장 정확합니다.",
+      "작은 친절이\n큰 인연으로 돌아오는 날입니다.",
+      "포기하려 했던 일에\n오늘 다시 빛이 보입니다.",
+      "지금 걷는 길이\n훗날 가장 빛나는 선택이 됩니다.",
+      "뜻밖의 행운이\n평범한 일상 속에 숨어 있습니다.",
+      "오늘 만나는 사람이\n당신의 다음 챕터를 엽니다.",
+      "무거운 짐을 내려놓아도\n좋은 날입니다.",
+      "천천히 가는 것이\n오늘만큼은 가장 빠른 길입니다.",
+      "잘 자고 잘 먹는 것이\n오늘의 가장 큰 투자입니다.",
+      "오래된 인연에서\n새로운 가능성이 싹틉니다.",
+    ];
+
+    let used = [];
+    let revealed = false;
+
+    function makeStars() {
+      const container = document.getElementById('stars');
+      for (let i = 0; i < 60; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const size = Math.random() * 2 + 1;
+        s.style.cssText = `
+          width:${size}px; height:${size}px;
+          left:${Math.random() * 100}%;
+          top:${Math.random() * 100}%;
+          --d:${(Math.random() * 3 + 2).toFixed(1)}s;
+          --delay:-${(Math.random() * 5).toFixed(1)}s;
+          --op:${(Math.random() * 0.5 + 0.3).toFixed(2)};
+        `;
+        container.appendChild(s);
+      }
+    }
+
+    function revealFortune() {
+      if (revealed) return;
+      revealed = true;
+
+      const orb = document.getElementById('orb');
+      const hint = document.getElementById('hint');
+      const ripple = document.getElementById('ripple');
+      const text = document.getElementById('fortuneText');
+      const divider = document.getElementById('divider');
+      const resetBtn = document.getElementById('resetBtn');
+
+      hint.style.opacity = '0';
+      orb.classList.add('active');
+
+      ripple.classList.remove('animate');
+      void ripple.offsetWidth;
+      ripple.classList.add('animate');
+
+      if (used.length >= fortunes.length) used = [];
+      const remaining = fortunes.filter((_, i) => !used.includes(i));
+      const idx = fortunes.indexOf(remaining[Math.floor(Math.random() * remaining.length)]);
+      used.push(idx);
+
+      text.innerHTML = fortunes[idx].replace('\n', '<br>');
+
+      setTimeout(() => {
+        text.classList.add('visible');
+        divider.classList.add('visible');
+        resetBtn.classList.add('visible');
+      }, 400);
+    }
+
+    function resetOrb() {
+      revealed = false;
+      const orb = document.getElementById('orb');
+      const hint = document.getElementById('hint');
+      const text = document.getElementById('fortuneText');
+      const divider = document.getElementById('divider');
+      const resetBtn = document.getElementById('resetBtn');
+
+      orb.classList.remove('active');
+      text.classList.remove('visible');
+      divider.classList.remove('visible');
+      resetBtn.classList.remove('visible');
+      hint.style.opacity = '';
+      text.innerHTML = '';
+    }
+
+    makeStars();
+  </script>
+</body>
+
+</html>
