@@ -18,6 +18,11 @@
       align-items: center;
       justify-content: center;
       background: #000;
+      transition: background 0.5s ease;
+    }
+
+    body.light {
+      background: #e8dcf5;
     }
 
     .scene {
@@ -33,6 +38,46 @@
       border-radius: 20px;
       position: relative;
       overflow: hidden;
+      transition: background 0.5s ease;
+    }
+
+    body.light .scene {
+      background: radial-gradient(ellipse at 50% 30%, #c8a8f0 0%, #dcc8f8 60%, #ede0ff 100%);
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(180, 100, 255, 0.35);
+      color: #b89fe0;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+      z-index: 10;
+      line-height: 1;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(180, 100, 255, 0.65);
+    }
+
+    body.light .theme-toggle {
+      background: rgba(100, 60, 180, 0.1);
+      border-color: rgba(100, 60, 180, 0.35);
+      color: #6040a0;
+    }
+
+    body.light .theme-toggle:hover {
+      background: rgba(100, 60, 180, 0.2);
     }
 
     .stars {
@@ -47,6 +92,11 @@
       border-radius: 50%;
       animation: twinkle var(--d, 3s) ease-in-out infinite var(--delay, 0s);
       opacity: 0;
+      transition: background 0.5s;
+    }
+
+    body.light .star {
+      background: #a070d0;
     }
 
     @keyframes twinkle {
@@ -69,6 +119,11 @@
       text-transform: uppercase;
       margin-bottom: 2rem;
       opacity: 0.8;
+      transition: color 0.5s;
+    }
+
+    body.light .title {
+      color: #5030a0;
     }
 
     .orb-wrap {
@@ -95,6 +150,16 @@
       animation: float 4s ease-in-out infinite;
     }
 
+    body.light .orb {
+      background: radial-gradient(circle at 38% 35%,
+          #ffffff 0%, #e8d0ff 15%, #c090ff 35%,
+          #8040d0 58%, #5020a0 78%, #301080 100%);
+      box-shadow:
+        0 0 40px 8px rgba(140, 80, 220, 0.45),
+        0 0 80px 20px rgba(120, 60, 200, 0.25),
+        inset 0 2px 12px rgba(255, 255, 255, 0.4);
+    }
+
     @keyframes float {
 
       0%,
@@ -114,6 +179,13 @@
         inset 0 2px 8px rgba(255, 255, 255, 0.18);
       transform: translateY(-4px) scale(1.03);
       animation-play-state: paused;
+    }
+
+    body.light .orb:hover {
+      box-shadow:
+        0 0 60px 16px rgba(150, 90, 240, 0.6),
+        0 0 120px 40px rgba(110, 60, 200, 0.35),
+        inset 0 2px 12px rgba(255, 255, 255, 0.5);
     }
 
     .orb-shine {
@@ -152,6 +224,11 @@
       animation: swirl 2s ease-in-out infinite;
     }
 
+    body.light .orb.active .orb-mist {
+      background: radial-gradient(circle at 50% 50%,
+          rgba(255, 255, 255, 0.35) 0%, transparent 70%);
+    }
+
     @keyframes swirl {
 
       0%,
@@ -177,6 +254,11 @@
       white-space: nowrap;
       text-transform: uppercase;
       animation: pulse-hint 2s ease-in-out infinite;
+      transition: color 0.5s;
+    }
+
+    body.light .click-hint {
+      color: #7050b0;
     }
 
     @keyframes pulse-hint {
@@ -208,8 +290,13 @@
       text-align: center;
       line-height: 1.65;
       opacity: 0;
-      transition: opacity 1.8s ease;
+      transition: opacity 1.8s ease, color 0.5s ease, text-shadow 0.5s ease;
       text-shadow: 0 0 18px rgba(200, 130, 255, 0.6);
+    }
+
+    body.light .fortune-text {
+      color: #3a1878;
+      text-shadow: 0 0 18px rgba(160, 100, 220, 0.4);
     }
 
     .fortune-text.visible {
@@ -222,7 +309,11 @@
       background: linear-gradient(90deg, transparent, #7040b0, transparent);
       margin: 1.2rem auto 0;
       opacity: 0;
-      transition: opacity 1.5s ease 0.5s;
+      transition: opacity 1.5s ease 0.5s, background 0.5s;
+    }
+
+    body.light .divider {
+      background: linear-gradient(90deg, transparent, #9060d0, transparent);
     }
 
     .divider.visible {
@@ -249,6 +340,14 @@
       color: #c0a0ff;
     }
 
+    body.light .reset-btn {
+      color: #7050b0;
+    }
+
+    body.light .reset-btn:hover {
+      color: #4020a0;
+    }
+
     .reset-btn.visible {
       opacity: 1;
     }
@@ -264,6 +363,10 @@
       border: 2px solid rgba(180, 100, 255, 0.6);
       opacity: 0;
       pointer-events: none;
+    }
+
+    body.light .ripple-ring {
+      border-color: rgba(120, 60, 210, 0.6);
     }
 
     .ripple-ring.animate {
@@ -287,6 +390,11 @@
 <body>
   <div class="scene" id="scene">
     <div class="stars" id="stars"></div>
+
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="테마 변경">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+
     <p class="title">오늘의 운세</p>
 
     <div class="orb-wrap" id="orbWrap" onclick="revealFortune()">
@@ -347,6 +455,12 @@
       }
     }
 
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light');
+      document.getElementById('themeIcon').innerHTML = isLight ? '&#9790;' : '&#9728;';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+
     function revealFortune() {
       if (revealed) return;
       revealed = true;
@@ -396,6 +510,13 @@
     }
 
     makeStars();
+
+    // 저장된 테마 복원
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light');
+      document.getElementById('themeIcon').innerHTML = '&#9790;';
+    }
   </script>
 </body>
 
