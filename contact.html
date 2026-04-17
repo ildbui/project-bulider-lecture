@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>제휴 문의</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      transition: background 0.5s ease;
+      padding: 2rem 1rem;
+    }
+
+    body.light {
+      background: #e8dcf5;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: radial-gradient(ellipse at 50% 0%, #1a0533 0%, #0d0118 60%, #000 100%);
+      border-radius: 20px;
+      padding: 2.5rem 2rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.5s ease;
+    }
+
+    body.light .card {
+      background: radial-gradient(ellipse at 50% 0%, #c8a8f0 0%, #dcc8f8 60%, #ede0ff 100%);
+    }
+
+    /* 별 배경 */
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--d, 3s) ease-in-out infinite var(--delay, 0s);
+      opacity: 0;
+      transition: background 0.5s;
+    }
+
+    body.light .star {
+      background: #a070d0;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; }
+      50% { opacity: var(--op, 0.7); }
+    }
+
+    /* 테마 토글 */
+    .theme-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(180, 100, 255, 0.35);
+      color: #b89fe0;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+      z-index: 10;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(180, 100, 255, 0.65);
+    }
+
+    body.light .theme-toggle {
+      background: rgba(100, 60, 180, 0.1);
+      border-color: rgba(100, 60, 180, 0.35);
+      color: #6040a0;
+    }
+
+    body.light .theme-toggle:hover {
+      background: rgba(100, 60, 180, 0.2);
+    }
+
+    /* 헤더 */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-label {
+      font-family: Georgia, serif;
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: #b89fe0;
+      text-transform: uppercase;
+      opacity: 0.8;
+      display: block;
+      margin-bottom: 0.6rem;
+      transition: color 0.5s;
+    }
+
+    body.light .header-label {
+      color: #5030a0;
+    }
+
+    .header h1 {
+      font-family: Georgia, serif;
+      font-size: 22px;
+      color: #e8d0ff;
+      font-weight: normal;
+      letter-spacing: 1px;
+      transition: color 0.5s;
+    }
+
+    body.light .header h1 {
+      color: #2a1060;
+    }
+
+    .divider-top {
+      width: 50px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #7040b0, transparent);
+      margin: 1rem auto 0;
+      transition: background 0.5s;
+    }
+
+    body.light .divider-top {
+      background: linear-gradient(90deg, transparent, #9060d0, transparent);
+    }
+
+    /* 폼 */
+    .form {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-family: Georgia, serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #9070c0;
+      text-transform: uppercase;
+      transition: color 0.5s;
+    }
+
+    body.light label {
+      color: #6040a0;
+    }
+
+    input,
+    textarea,
+    select {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(160, 80, 255, 0.25);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: #e8d0ff;
+      font-family: Georgia, serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.25s, background 0.25s, color 0.5s;
+      width: 100%;
+    }
+
+    body.light input,
+    body.light textarea,
+    body.light select {
+      background: rgba(255, 255, 255, 0.45);
+      border-color: rgba(120, 60, 200, 0.3);
+      color: #2a1060;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(180, 130, 230, 0.4);
+    }
+
+    body.light input::placeholder,
+    body.light textarea::placeholder {
+      color: rgba(100, 60, 160, 0.4);
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: rgba(180, 100, 255, 0.7);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    body.light input:focus,
+    body.light textarea:focus,
+    body.light select:focus {
+      border-color: rgba(120, 60, 200, 0.7);
+      background: rgba(255, 255, 255, 0.65);
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239070c0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+
+    select option {
+      background: #1a0533;
+      color: #e8d0ff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    /* 제출 버튼 */
+    .submit-btn {
+      margin-top: 0.4rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(180, 100, 255, 0.5);
+      background: rgba(120, 50, 220, 0.25);
+      color: #d0b0ff;
+      font-family: Georgia, serif;
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.15s;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      background: rgba(140, 60, 240, 0.45);
+      border-color: rgba(200, 120, 255, 0.7);
+      color: #eedcff;
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    body.light .submit-btn {
+      background: rgba(100, 50, 200, 0.15);
+      border-color: rgba(100, 50, 200, 0.45);
+      color: #4020a0;
+    }
+
+    body.light .submit-btn:hover:not(:disabled) {
+      background: rgba(100, 50, 200, 0.3);
+      border-color: rgba(100, 50, 200, 0.7);
+      color: #2a0880;
+    }
+
+    /* 결과 메시지 */
+    .result {
+      display: none;
+      text-align: center;
+      padding: 1rem;
+      border-radius: 10px;
+      font-family: Georgia, serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .result.success {
+      display: block;
+      background: rgba(80, 200, 120, 0.1);
+      border: 1px solid rgba(80, 200, 120, 0.3);
+      color: #80e0a0;
+    }
+
+    .result.error {
+      display: block;
+      background: rgba(220, 80, 80, 0.1);
+      border: 1px solid rgba(220, 80, 80, 0.3);
+      color: #e08080;
+    }
+
+    body.light .result.success {
+      background: rgba(40, 160, 80, 0.1);
+      border-color: rgba(40, 160, 80, 0.3);
+      color: #1a7040;
+    }
+
+    body.light .result.error {
+      background: rgba(180, 40, 40, 0.1);
+      border-color: rgba(180, 40, 40, 0.3);
+      color: #901010;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="stars" id="stars"></div>
+
+    <button class="theme-toggle" onclick="toggleTheme()" title="테마 변경">
+      <span id="themeIcon">&#9728;</span>
+    </button>
+
+    <div class="header">
+      <span class="header-label">Partnership</span>
+      <h1>제휴 문의</h1>
+      <div class="divider-top"></div>
+    </div>
+
+    <form class="form" id="contactForm">
+      <div class="field">
+        <label for="name">이름</label>
+        <input type="text" id="name" name="name" placeholder="홍길동" required />
+      </div>
+
+      <div class="field">
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" placeholder="hello@example.com" required />
+      </div>
+
+      <div class="field">
+        <label for="company">회사명</label>
+        <input type="text" id="company" name="company" placeholder="(주)예시 회사" />
+      </div>
+
+      <div class="field">
+        <label for="type">문의 유형</label>
+        <select id="type" name="type">
+          <option value="">선택해 주세요</option>
+          <option value="광고·협찬">광고 · 협찬</option>
+          <option value="콘텐츠 제휴">콘텐츠 제휴</option>
+          <option value="기술·API 연동">기술 · API 연동</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="message">문의 내용</label>
+        <textarea id="message" name="message" placeholder="제휴 내용을 자유롭게 적어 주세요." required></textarea>
+      </div>
+
+      <div class="result" id="result"></div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">문의 보내기</button>
+    </form>
+  </div>
+
+  <script>
+    function makeStars() {
+      const container = document.getElementById('stars');
+      for (let i = 0; i < 40; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const size = Math.random() * 2 + 1;
+        s.style.cssText = `
+          width:${size}px; height:${size}px;
+          left:${Math.random() * 100}%;
+          top:${Math.random() * 100}%;
+          --d:${(Math.random() * 3 + 2).toFixed(1)}s;
+          --delay:-${(Math.random() * 5).toFixed(1)}s;
+          --op:${(Math.random() * 0.5 + 0.3).toFixed(2)};
+        `;
+        container.appendChild(s);
+      }
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light');
+      document.getElementById('themeIcon').innerHTML = isLight ? '&#9790;' : '&#9728;';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('submitBtn');
+      const result = document.getElementById('result');
+
+      btn.disabled = true;
+      btn.textContent = '전송 중...';
+      result.className = 'result';
+      result.textContent = '';
+
+      try {
+        const res = await fetch('https://formspree.io/f/xrerpdnp', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(this),
+        });
+
+        if (res.ok) {
+          result.className = 'result success';
+          result.textContent = '문의가 접수되었습니다. 빠른 시일 내에 답변 드리겠습니다.';
+          this.reset();
+        } else {
+          throw new Error();
+        }
+      } catch {
+        result.className = 'result error';
+        result.textContent = '전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '문의 보내기';
+      }
+    });
+
+    makeStars();
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light');
+      document.getElementById('themeIcon').innerHTML = '&#9790;';
+    }
+  </script>
+</body>
+
+</html>
