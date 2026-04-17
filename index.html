@@ -352,6 +352,33 @@
       opacity: 1;
     }
 
+    .contact-link {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: Georgia, serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #5a3a80;
+      text-transform: uppercase;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s;
+    }
+
+    .contact-link:hover {
+      color: #9070c0;
+    }
+
+    body.light .contact-link {
+      color: #8060b0;
+    }
+
+    body.light .contact-link:hover {
+      color: #4020a0;
+    }
+
     .ripple-ring {
       position: absolute;
       top: 50%;
@@ -413,6 +440,7 @@
     </div>
     <div class="divider" id="divider"></div>
     <button class="reset-btn" id="resetBtn" onclick="resetOrb()">다시 묻기</button>
+    <a class="contact-link" href="contact.html">제휴 문의</a>
   </div>
 
   <script>
